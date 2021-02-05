@@ -118,5 +118,15 @@ def read_meta_from_csv():
     return train_metadata, test_metadata
 
 
+def read_dicom(file_path):
+    ds = dcmread(file_path)
+    image_id = os.path.basename(file_path).split(sep='.')[0]
+    return ds
+
+
+def read_dicom_pixel(file_path):
+    return read_dicom(file_path).pixel_array
+
+
 if __name__ == "__main__":
     multi_extract_meta_information()
