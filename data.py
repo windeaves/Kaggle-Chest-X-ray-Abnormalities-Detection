@@ -70,7 +70,7 @@ def read_meta(file_path):
 def extract_meta_information(args):
     (folder, offset, batch) = args
     folder_filename = os.listdir(os.path.join(PATH, folder))
-    folder_filename = [folder_filename[i] for i in range(offset, len(folder_filename) - 1, batch)]
+    folder_filename = [folder_filename[i] for i in range(offset, len(folder_filename), batch)]
     one_obs = read_meta(os.path.join(PATH, folder, folder_filename[0]))
     metadata = pd.DataFrame(columns=one_obs.keys())
 
@@ -110,6 +110,12 @@ def extract_test_meta():
     test_metadata.to_csv(f"./test_dicom_metadata.csv", index=False)
     pool.close()
     return test_metadata
+
+
+def read_meta_from_csv():
+    train_metadata = pd.read_csv(os.path.join(os.curdir, "train_dicom_metadata.csv"))
+    test_metadata = pd.read_csv(os.path.join(os.curdir, "test_dicom_metadata.csv"))
+    return train_metadata, test_metadata
 
 
 if __name__ == "__main__":
