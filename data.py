@@ -74,7 +74,8 @@ def extract_meta_information(args):
     one_obs = read_meta(os.path.join(PATH, folder, folder_filename[0]))
     metadata = pd.DataFrame(columns=one_obs.keys())
 
-    for filename in tqdm(folder_filename, desc=folder + " " + str(offset)):
+    for filename in tqdm(folder_filename, desc=folder + " " + str(offset+100)[1:]):
+    # for filename in folder_filename:
         try:
             one_obs = read_meta(os.path.join(PATH, folder, filename))
             metadata = metadata.append(one_obs, ignore_index=True)
@@ -84,16 +85,32 @@ def extract_meta_information(args):
 
 
 def multi_extract_meta_information():
+    return (extract_train_meta(),
+    extract_test_meta())
+    
+
+def extract_train_meta():
     pool = mp.Pool(mp.cpu_count())
     train_meta_data = pool.map(extract_meta_information, [("train", x, mp.cpu_count()) for x in range(mp.cpu_count())])
-    metadata = pd.DataFrame(columns=train_meta_data[0].columns)
+    train_metadata = pd.DataFrame(columns=train_meta_data[0].columns)
     for meta_data in train_meta_data:
-        metadata.append(meta_data, ignore_index=True)
-    metadata.columns = metadata.columns.map(mapper_dict)
-    metadata.to_csv(f"./train_dicom_metadata.csv", index=False)
-    return metadata
+        train_metadata = train_metadata.append(meta_data, ignore_index=True)
+    train_metadata.columns = train_metadata.columns.map(mapper_dict)
+    train_metadata.to_csv(f"./train_dicom_metadata.csv", index=False)
+    pool.close()
+    return train_meta_data
+
+def extract_test_meta():
+    pool = mp.Pool(mp.cpu_count())
+    test_meta_data = pool.map(extract_meta_information, [("test", x, mp.cpu_count()) for x in range(mp.cpu_count())])
+    test_metadata = pd.DataFrame(columns=test_meta_data[0].columns)
+    for meta_data in test_meta_data:
+        test_metadata = test_metadata.append(meta_data, ignore_index=True)
+    test_metadata.columns = test_metadata.columns.map(mapper_dict)
+    test_metadata.to_csv(f"./test_dicom_metadata.csv", index=False)
+    pool.close()
+    return test_metadata
 
 
 if __name__ == "__main__":
     multi_extract_meta_information()
-    # print(extract_meta_information(("train", 0, 200)))
