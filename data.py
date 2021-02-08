@@ -120,7 +120,6 @@ def read_meta_from_csv():
 
 def read_dicom(file_path):
     ds = dcmread(file_path)
-    image_id = os.path.basename(file_path).split(sep='.')[0]
     return ds
 
 
