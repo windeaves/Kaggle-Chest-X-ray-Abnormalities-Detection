@@ -8,6 +8,8 @@ import multiprocessing as mp
 
 from pydicom import dcmread
 
+from PIL import Image
+
 # dataset path
 PATH = "../dataset"
 
@@ -127,5 +129,26 @@ def read_dicom_pixel(file_path):
     return read_dicom(file_path).pixel_array
 
 
+dataset_path = "dataset/images/train"
+
+def save_png(args):
+    (folder, offset, batch) = args
+    folder_filename = os.listdir(os.path.join(PATH, folder))
+    folder_filename = [folder_filename[i] for i in range(offset, len(folder_filename), batch)]
+
+    for filename in tqdm(folder_filename, desc=folder + " " + str(offset+100)[1:]):
+    # for filename in folder_filename:
+        try:
+            one_obs = read_dicom_pixel(os.path.join(PATH, folder, filename))
+            im = Image.fromarray(one_obs)
+            im.save(os.path.join(dataset_path, filename+".png"))
+        except Exception as e:
+            print(e)
+
+
+def multi_save_png():
+    pool = mp.Pool(mp.cpu_count())
+    pool.map(save_png, [("train", x, mp.cpu_count()) for x in range(mp.cpu_count())])
+
 if __name__ == "__main__":
-    multi_extract_meta_information()
+    multi_save_png()
