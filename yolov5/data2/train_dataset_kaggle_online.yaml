@@ -4,8 +4,8 @@
   #       /train_dataset
 
 
-  train: /kaggle/input/own-chest-x-ray-abnormal/dataset/images/train/
-  val: /kaggle/input/own-chest-x-ray-abnormal/dataset/images/val/
+  train: /kaggle/working/own/dataset/images/train/
+  val: /kaggle/working/own/dataset/images/val/
 
   # number of classes
   nc: 14
