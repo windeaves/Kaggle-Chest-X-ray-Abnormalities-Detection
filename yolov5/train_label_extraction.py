@@ -1,11 +1,10 @@
 import csv
 import os
 
-
-file_path = r"C:\Users\Alan Li\Documents\GitHub\Kaggle-Chest-X-ray-Abnormalities-Detection\yolov5\data\train_set.csv"
+file_path = r"data\train_set.csv"
 # image_size_path = "IMAGE_SIZE"
-save_folder = r"C:\Users\Alan Li\Documents\GitHub\Kaggle-Chest-X-ray-Abnormalities-Detection\yolov5\data\label"
-img_size_file = r"C:\Users\Alan Li\Documents\GitHub\Kaggle-Chest-X-ray-Abnormalities-Detection\yolov5\data\train_image_size.csv"
+save_folder = r"data\label"
+img_size_file = r"data\train_image_size.csv"
 
 # img_size = open(image_size_path, mode='r')
 
@@ -20,7 +19,7 @@ with open(img_size_file, mode='r') as img_size:
         elif row[0] == "":
             break
         else:
-            size_dict[row[0]] = (row[2], row[1]) # (x, y)
+            size_dict[row[0]] = (row[2], row[1])  # (x, y)
 
 # read csv file
 with open(file_path, mode='r') as csvfile:
@@ -34,16 +33,18 @@ with open(file_path, mode='r') as csvfile:
             break
         else:
             # create txt
-            save_file = open(r"C:\Users\Alan Li\Documents\GitHub\Kaggle-Chest-X-ray-Abnormalities-Detection\yolov5\data\label\\" + row[0] + ".txt", "a")
-
             if row[1] == "14":
                 save_file = open(
-                    r"C:\Users\Alan Li\Documents\GitHub\Kaggle-Chest-X-ray-Abnormalities-Detection\yolov5\data\label\\" +
+                    r"data\label\\" +
                     row[0] + ".txt", "a")
                 save_file.close()
                 continue
 
-            save_file.write(row[1] + "\t" + str((int(row[2]) + int(row[4])) / int(size_dict[row[0]][0])) + "\t" + str((int(row[3]) + int(row[5])) / int(size_dict[row[0]][1])) + "\t" + str((int(row[4]) - int(row[2])) / int(size_dict[row[0]][0])) + "\t" + str((int(row[5]) + int(row[3])) / int(size_dict[row[0]][1])) + "\n")
+            save_file = open(r"data\label\\" + row[0] + ".txt", "a")
+
+            save_file.write(row[1] + "\t" + str((int(row[2]) + int(row[4])) / 2 / int(size_dict[row[0]][0])) + "\t" + str(
+                (int(row[3]) + int(row[5])) / 2 / int(size_dict[row[0]][1])) + "\t" + str(
+                (int(row[4]) - int(row[2])) / int(size_dict[row[0]][0])) + "\t" + str(
+                (int(row[5]) - int(row[3])) / int(size_dict[row[0]][1])) + "\n")
             save_file.close()
             print(row[0] + " saved")
-
