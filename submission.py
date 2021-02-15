@@ -6,15 +6,15 @@ from tqdm import tqdm
 
 dataset_detect_path = "../dataset/test"
 
-label_path = "yolov5/runs/detect/exp2/labels"
+label_path = "yolov5/runs/detect/exp11/labels"
 
 result_save_path = "submission/"
 
 if __name__ == '__main__':
     detect_files = os.listdir(dataset_detect_path)
 
-    with open(os.path.join(result_save_path, "submission.txt"), 'a') as f:
-        f.write('image_id, PredictionString\n')
+    with open(os.path.join(result_save_path, "submission4.txt"), 'a') as f:
+        f.write('image_id,PredictionString\n')
         for file in tqdm(detect_files):
             try:
                 meta = read_meta(os.path.join(dataset_detect_path, file))
