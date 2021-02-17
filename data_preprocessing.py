@@ -67,8 +67,6 @@ def nms_sub(args):
     rest_data_id_list = [rest_data_id_list[i] for i in range(offset, len(rest_data_id_list), batch)]
     print(len(rest_data_id_list))
     for nid in tqdm(rest_data_id_list):
-        if "c2d4ab1622ab34e5680710a63501c8b6" in nid:
-            print("it;s me")
         kp = rest_data[rest_data.nid == nid].reset_index(drop = True)
 
         # comp_data = comp_data.append(kp, ignore_index=True)
@@ -85,7 +83,7 @@ def nms_sub(args):
                 box_i = box(kp.loc[i])
                 for j in range(i + 1, nkp):
                     if contain_list[j]:
-                        if True or calc_IoU(box_i, box(kp.loc[j])) > 0.3:
+                        if calc_IoU(box_i, box(kp.loc[j])) > 0.3:
                             contain_list[j] = False
 
         kp["exist"] = pd.Series(contain_list)
@@ -123,19 +121,19 @@ if __name__ == "__main__":
     comp_data = comp_data.drop_duplicates()
 
     # carring on nms
-    # pool = mp.Pool(mp.cpu_count())
-    # nmsed_datas = pool.map(nms_sub, [(rest_data_id_list, rest_data, offset, mp.cpu_count()) for offset in range(mp.cpu_count())])
+    pool = mp.Pool(mp.cpu_count())
+    nmsed_datas = pool.map(nms_sub, [(rest_data_id_list, rest_data, offset, mp.cpu_count()) for offset in range(mp.cpu_count())])
 
     # pool = mp.Pool(1)
     # nmsed_datas = pool.map(nms_sub, [(rest_data_id_list, rest_data, offset, 1) for offset in range(1)])
-    nmsed_datas = [nms_sub((rest_data_id_list, rest_data, 0, 1))]
+    # nmsed_datas = [nms_sub((rest_data_id_list, rest_data, 0, 1))]
 
     cnt = comp_data.image_id.unique().size
 
     for nmsed_data in nmsed_datas:
         # nmsed_data.apply()
         # cnt += nmsed_data.image_id.unique().size
-        print(nmsed_data.image_id.unique().size)
+        # print(nmsed_data.image_id.unique().size)
         comp_data = comp_data.append(nmsed_data, ignore_index=True)
 
     print(comp_data.image_id.unique().size)
