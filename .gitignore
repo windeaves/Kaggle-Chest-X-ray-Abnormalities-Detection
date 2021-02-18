@@ -4,3 +4,6 @@ dataset/
 
 *.cache
 *.zip
+
+yolov5x_1280/
+yolov5x_1120/
