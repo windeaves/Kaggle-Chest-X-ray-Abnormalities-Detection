@@ -60,6 +60,7 @@ VOC/
 *.torchscript
 darknet53.conv.74
 yolov3-tiny.conv.15
+yolov5x_part_1280
 
 # GitHub Python GitIgnore ----------------------------------------------------------------------------------------------
 # Byte-compiled / optimized / DLL files
